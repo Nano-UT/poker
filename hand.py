@@ -11,7 +11,7 @@ class num:
       else:
         number = ["dews", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "Jack", "Queen", "King", "Ace"]
       self._num = number[(num + 11) % 13]
-      self._size = (num + 11) % 13 + 2
+      self._size = (num + 11) % 13 + 2 #2~14(A=14)
 
   def __repr__(self):
       return "{}".format(self._num)
@@ -70,7 +70,7 @@ class hand(card):
       Chand = 0
 
       #ストレート判断
-      if numbers[0] == 0 and numbers[1] == 1 and numbers[2] == 2 and numbers[3] == 3 and numbers [4] == 12:
+      if numbers[0] == 2 and numbers[1] == 3 and numbers[2] == 4 and numbers[3] == 5 and numbers [4] == 14:
           straight = True
       elif numbers[0] >= 1 and numbers[4] - numbers[3] == numbers[3] - numbers[2] == numbers[2] - numbers[1] == numbers[1] - numbers[0] == 1:
           straight = True
@@ -105,9 +105,12 @@ class hand(card):
       for i in range(5):
           self._num.append(numbers[4-i])
 
+
       if straight and flush:
           self._hand = "Straight Flush"
           self._power = 9
+          if self._num(4) == 5
+
       elif Chand == 4:
           self._hand = "Four of a Kind"
           self._power = 8
