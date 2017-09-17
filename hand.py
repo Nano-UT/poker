@@ -58,93 +58,92 @@ class hand(card):
 
   def __init__(self, C1, C2, C3, C4, C5):
 
+      numbers = [C1._size, C2._size, C3._size, C4._size, C5._size]
+      numbers.sort()
+      numbers.reverse()
+
       #フラッシュ判断
       if C1._suit == C2._suit == C3._suit == C4._suit == C5._suit:
           flush = True
+          self._power = [6] + numbers
       else:
           flush = False
 
-      numbers = [C1._size, C2._size, C3._size, C4._size, C5._size]
-      numbers.sort()
-
-      Chand = 0
-
       #ストレート判断
-      if numbers[0] == 2 and numbers[1] == 3 and numbers[2] == 4 and numbers[3] == 5 and numbers [4] == 14:
+      if numbers[0] == 14 and numbers[1] == 5 and numbers[2] == 4 and numbers[3] == 3 and numbers [4] == 2:
           straight = True
-      elif numbers[0] >= 1 and numbers[4] - numbers[3] == numbers[3] - numbers[2] == numbers[2] - numbers[1] == numbers[1] - numbers[0] == 1:
+          self._power = [5,5,4,3,2,1]
+      elif numbers[0] - numbers[1] == numbers[1] - numbers[2] == numbers[2] - numbers[3] == numbers[3] - numbers[4] == 1:
           straight = True
+          self._power = [5] + numbers
       else:
           straight = False
 
       #ペア判断
       if numbers[0] == numbers[1] == numbers[2] == numbers[3] or numbers[1] == numbers[2] == numbers[3] == numbers[4]:
-          Chand = 4
+          self._hand = "Four of a Kind"
+          if numbers[0] == numbers[3]:
+              self._power = [8] + numbers
+          else:
+              self._power = [8] + numbers[1:] + numbers[0:1]
       elif numbers[0] == numbers[1] == numbers[2]:
           if numbers[3] == numbers[4]:
-              Chand = 5
+              self._hand = "Full House"
+              self._power = [7] + numbers
           else:
-              Chand = 3
+              self._hand = "Three of a Kind"
+              self._power = [4] + numbers
       elif numbers[1] == numbers[2] == numbers[3]:
-          Chand = 3
+          self._hand = "Three of a Kind"
+          self._power = [4] + numbers[1:4] + numbers[0:1] + numbers[4:]
       elif numbers[2] == numbers[3] == numbers[4]:
           if numbers[0] == numbers[1]:
-              Chand = 5
+              self._hand = "Full House"
+              self._power = [7] + numbers[2:] + numbers[:2]
           else:
-              Chand = 3
-      elif numbers[0] < numbers[1] < numbers[2] < numbers[3] < numbers[4]:
-          Chand = 0
-      elif (numbers[0] == numbers[1] and numbers[2] == numbers[3]) or (numbers[0] == numbers[1] and numbers[3] == numbers[4]) or (numbers[1] == numbers[2] and numbers[3] == numbers[4]):
-          Chand = 2
-      else:
-          Chand = 1
-
-      self._num = []
-      self._cards = [C1,C2,C3,C4,C5]
-
-      for i in range(5):
-          self._num.append(numbers[4-i])
-
+              self._hand = "Three of a Kind"
+              self._power = [4] + numbers[2:] + numbers[:2]
+      elif numbers[0] > numbers[1] > numbers[2] > numbers[3] > numbers[4]:
+          self._hand = "High Card"
+          self._power = [1] + numbers
+      elif (numbers[0] == numbers[1] and numbers[2] == numbers[3]):
+          self._hand = "Two Pair"
+          self._power = [3] + numbers
+      elif (numbers[0] == numbers[1] and numbers[3] == numbers[4]):
+          self._hand = "Two Pair"
+          self._power = [3] + numbers[:2] + numbers[3:] + numbers[2:3]
+      elif (numbers[1] == numbers[2] and numbers[3] == numbers[4]):
+          self._hand = "Two Pair"
+          self._power = [3] + numbers[1:] + numbers[:1]
+      elif numbers[0] == numbers[1]:
+          self._hand = "One Pair"
+          self._power = [2] + numbers
+      elif numbers[1] == numbers[2]:
+          self._hand = "One Pair"
+          self._power = [2] + numbers[1:3] + numbers[:1] + numbers[3:]
+      elif numbers[2] == numbers[3]:
+          self._hand = "One Pair"
+          self._power = [2] + numbers[2:4] + numbers[:2] + numbers[4:]
+      elif numbers[3] == numbers[4]:
+          self._hand = "One Pair"
+          self._power = [2] + numbers[3:] + numbers[:3]
 
       if straight and flush:
-          self._hand = "Straight Flush"
-          self._power = 9
-          if self._num(4) == 5
+          if numbers[4] == 10:
+              self._hand = "Royal Flush"
+              self._power[0] = 10
+          else:
+              self._hand = "Straight Flush"
+              self._power[0] = 9
 
-      elif Chand == 4:
-          self._hand = "Four of a Kind"
-          self._power = 8
-      elif Chand == 5:
-          self._hand = "Full House"
-          self._power = 7
-      elif flush:
-          self._hand = "Flush"
-          self._power = 6
-      elif straight:
-          self._hand = "Straight"
-          self._power = 5
-      elif Chand == 3:
-          self._hand = "Three of a Kind"
-          self._power = 4
-      elif Chand == 2:
-          self._hand = "Two Pair"
-          self._power = 3
-      elif Chand == 1:
-          self._hand = "One Pair"
-          self._power = 2
-      elif Chand == 0:
-          self._hand = "High Card"
-          self._power = 1
-      else:
-          self._hand = "Error!!!"
-          self._power = False
+      self._cards = [C1,C2,C3,C4,C5]
 
   def __repr__(self):
       return "{} ({})".format(self._hand, self._cards)
 
 class pocketboard(hand):
   def __init__(self,seven):
-      power = 0
+      power = [0,0,0,0,0,0]
       for y in range(7):
           six = seven[:]
           del six[y]
@@ -152,16 +151,15 @@ class pocketboard(hand):
               five = six[:]
               del five[z]
               hands = hand(five[0], five[1], five[2], five[3], five[4])
-              if hands._power > power:
-                  power = hands._power
-                  judge = hands
-              elif hands._power == power:
-                  for n in range(5):
-                      if hands._num[n] > judge._num[n]:
-                          judge = hands
-                          break
+              for n in range(6):
+                  if hands._power[n] < power[n]:
+                      break
+                  elif hands._power[n] > power[n]:
+                      judge = hands
+                      power = hands._power
+                      break
       self._hand = judge
-      self._power = [judge._power] + judge._num
+      self._power = power
       #課題は、役 ラグの順にpowerを決めることと、A~5ストレートの扱い
 
   def __repr__(self):
