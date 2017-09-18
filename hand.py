@@ -158,9 +158,9 @@ class pocketboard(hand):
                       judge = hands
                       power = hands._power
                       break
+      self._cards = seven
       self._hand = judge
       self._power = power
-      #課題は、役 ラグの順にpowerを決めることと、A~5ストレートの扱い
 
   def __repr__(self):
       return "{}".format(self._hand)
