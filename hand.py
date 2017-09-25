@@ -65,22 +65,36 @@ class hand(card):
       #フラッシュ判断
       if C1._suit == C2._suit == C3._suit == C4._suit == C5._suit:
           flush = True
-          self._power = [6] + numbers
       else:
           flush = False
 
       #ストレート判断
       if numbers[0] == 14 and numbers[1] == 5 and numbers[2] == 4 and numbers[3] == 3 and numbers [4] == 2:
           straight = True
-          self._power = [5,5,4,3,2,1]
       elif numbers[0] - numbers[1] == numbers[1] - numbers[2] == numbers[2] - numbers[3] == numbers[3] - numbers[4] == 1:
           straight = True
-          self._power = [5] + numbers
       else:
           straight = False
 
       #ペア判断
-      if numbers[0] == numbers[1] == numbers[2] == numbers[3] or numbers[1] == numbers[2] == numbers[3] == numbers[4]:
+      if straight and flush:
+          if numbers[4] == 10:
+              self._hand = "Royal Flush"
+              self._power[0] = 10
+          else:
+              self._hand = "Straight Flush"
+              self._power[0] = 9
+      elif flush:
+          self._power = [6] + numbers
+          self._hand = "Flush"
+      elif straight:
+          if numbers[0] == 14:
+              self._power = [5,5,4,3,2,1]
+              self._hand = "Straight"
+          else:
+              self._power = [5] + numbers
+              self._hand = "Straight"
+      elif numbers[0] == numbers[1] == numbers[2] == numbers[3] or numbers[1] == numbers[2] == numbers[3] == numbers[4]:
           self._hand = "Four of a Kind"
           if numbers[0] == numbers[3]:
               self._power = [8] + numbers
@@ -127,14 +141,6 @@ class hand(card):
       elif numbers[3] == numbers[4]:
           self._hand = "One Pair"
           self._power = [2] + numbers[3:] + numbers[:3]
-
-      if straight and flush:
-          if numbers[4] == 10:
-              self._hand = "Royal Flush"
-              self._power[0] = 10
-          else:
-              self._hand = "Straight Flush"
-              self._power[0] = 9
 
       self._cards = [C1,C2,C3,C4,C5]
 
