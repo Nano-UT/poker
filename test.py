@@ -7,6 +7,16 @@ def mkplayers(names,players):
         players.append(player(s,board,[test._deck[0],test._deck[1]]))
         del(test._deck[:2])
 
+class board(card):
+    def __init__(self,cards):
+
+
+class table(player):
+    def __init__(self,players):
+        cards = deck()
+        cards.shuffle()
+        board = [test._deck[0],test._deck[1], test._deck[2], test._deck[3], test._deck[4]]
+
 playernames = ["Alice","Bob","Charley","Desmond","Emily"]
 
 for x in range(20):

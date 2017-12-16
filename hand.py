@@ -19,11 +19,19 @@ class num:
 class suit:
 
   def __init__(self, suit):
+      red = "\033[91m"
+      green = "\033[92m"
+      yellow = "\033[93m"
+      black = "\033[30m"
+      white = "\033[37m"
+      ENDC = "\033[0m"
+      colors = [yellow,green,red,white]
       if mode:
         suits = ["♦︎", "♣︎", "❤︎", "♠︎"]
       else:
         suits = ["Diamond", "Club", "Heart", "Spade"]
       self._suit = suits[suit]
+      self._color = colors[suit]
 
   def __repr__(self):
       return "{}".format(self._suit)
@@ -33,13 +41,19 @@ class card(num,suit):
   def __init__(self, Cnum, Csuit):
       self._num = num(Cnum)._num
       self._suit = suit(Csuit)._suit
+      self._color = suit(Csuit)._color
       self._size = num(Cnum)._size
+      self._show = True
 
   def __repr__(self):
-      if mode:
-        return "{} {}".format(self._suit, self._num)
+      if self._show:
+          if mode:
+              return "\033[40m{}{} {}\033[0m".format(self._color, self._suit, self._num,)
+          else:
+              return "\033[40m{}{} of {}\033[0m".format(self._color,self._num, self._suit)
       else:
-        return "{} of {}".format(self._num, self._suit)
+          return "\033[40m   \033[0m"
+
 
 class deck(card):
 
@@ -80,10 +94,10 @@ class hand(card):
       if straight and flush:
           if numbers[4] == 10:
               self._hand = "Royal Flush"
-              self._power[0] = 10
+              self._power = [10,14,13,12,11,10]
           else:
               self._hand = "Straight Flush"
-              self._power[0] = 9
+              self._power = [9] + numbers
       elif flush:
           self._power = [6] + numbers
           self._hand = "Flush"
