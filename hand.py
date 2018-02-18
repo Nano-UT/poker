@@ -38,12 +38,12 @@ class suit:
 
 class card(num,suit):
 
-  def __init__(self, Cnum, Csuit):
+  def __init__(self, Cnum, Csuit, show = True):
       self._num = num(Cnum)._num
       self._suit = suit(Csuit)._suit
       self._color = suit(Csuit)._color
       self._size = num(Cnum)._size
-      self._show = True
+      self._show = show
 
   def __repr__(self):
       if self._show:
@@ -53,6 +53,9 @@ class card(num,suit):
               return "\033[40m{}{} of {}\033[0m".format(self._color,self._num, self._suit)
       else:
           return "\033[40m   \033[0m"
+
+  def turn(self):
+      self._show = not self._show
 
 
 class deck(card):
